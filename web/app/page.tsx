@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import type { ReactNode } from "react";
 
 type EncodedPolynomial = {
   degree: number;
@@ -28,6 +29,39 @@ type DivideResult = {
 };
 
 export default function Home() {
+  function prettyPoly(poly: string | undefined): ReactNode {
+    if (!poly) return "0";
+
+    // Make + more readable: a+b -> a + b
+    const normalized = poly.replace(/\+/g, " + ");
+
+    // Replace x^<digits> with x<sup>digits</sup> so digits stay consistent size.
+    const out: ReactNode[] = [];
+    const re = /x\^(\d+)/g;
+    let lastIndex = 0;
+    let match: RegExpExecArray | null;
+
+    while ((match = re.exec(normalized)) !== null) {
+      const before = normalized.slice(lastIndex, match.index);
+      if (before) out.push(before);
+
+      const expDigits = match[1];
+      out.push(
+        <span key={`${match.index}-${expDigits}`}>
+          x
+          <sup className="text-[0.7em] leading-none align-baseline">{expDigits}</sup>
+        </span>
+      );
+
+      lastIndex = match.index + match[0].length;
+    }
+
+    const after = normalized.slice(lastIndex);
+    if (after) out.push(after);
+
+    return <span>{out}</span>;
+  }
+
   const [p, setP] = useState<number>(2);
   const [mode, setMode] = useState<"auto" | "bitstring" | "polynomial">("auto");
   const [showSteps, setShowSteps] = useState<boolean>(false);
@@ -95,9 +129,7 @@ export default function Home() {
         <header className="mb-8">
           <h1 className="text-3xl font-semibold tracking-tight">polyLD</h1>
           <p className="mt-2 max-w-2xl text-sm text-zinc-600 dark:text-zinc-300">
-            Polynomial long division over <span className="font-mono">GF(p)</span>. This page uses the same inputs as your CLI:
-            <span className="font-mono"> --p</span>, <span className="font-mono"> --dividend</span>, <span className="font-mono"> --divisor</span>, and{" "}
-            <span className="font-mono"> --showSteps</span>.
+            Polynomial long division over <span className="font-mono">GF(p)</span>
           </p>
         </header>
 
@@ -246,8 +278,11 @@ export default function Home() {
                   <div className="rounded-xl bg-zinc-50 p-4 dark:bg-zinc-900/50">
                     <div className="text-xs font-medium text-zinc-500">Quotient</div>
                     <div className="mt-2 break-all font-mono text-sm">
-                      {result.quotient.polynomial ??
-                        (result.quotient.bitString ? `(${result.quotient.bitString})` : "0")}
+                      {result.quotient.polynomial
+                        ? prettyPoly(result.quotient.polynomial)
+                        : result.quotient.bitString
+                          ? `(${result.quotient.bitString})`
+                          : "0"}
                     </div>
                     {result.quotient.bitString && (
                       <div className="mt-2 text-xs text-zinc-500">bits: {result.quotient.bitString}</div>
@@ -257,8 +292,11 @@ export default function Home() {
                   <div className="rounded-xl bg-zinc-50 p-4 dark:bg-zinc-900/50">
                     <div className="text-xs font-medium text-zinc-500">Remainder</div>
                     <div className="mt-2 break-all font-mono text-sm">
-                      {result.remainder.polynomial ??
-                        (result.remainder.bitString ? `(${result.remainder.bitString})` : "0")}
+                      {result.remainder.polynomial
+                        ? prettyPoly(result.remainder.polynomial)
+                        : result.remainder.bitString
+                          ? `(${result.remainder.bitString})`
+                          : "0"}
                     </div>
                     {result.remainder.bitString && (
                       <div className="mt-2 text-xs text-zinc-500">bits: {result.remainder.bitString}</div>
@@ -289,15 +327,15 @@ export default function Home() {
                           <div className="mt-2 space-y-1 text-[11px] text-zinc-600 dark:text-zinc-300">
                             <div>
                               <span className="text-zinc-500">Subtrahend:</span>{" "}
-                              <span className="font-mono">{step.subtrahend.polynomial ?? "0"}</span>
+                              <span className="font-mono">{prettyPoly(step.subtrahend.polynomial)}</span>
                             </div>
                             <div>
                               <span className="text-zinc-500">Quotient after:</span>{" "}
-                              <span className="font-mono">{step.quotientAfter.polynomial ?? "0"}</span>
+                              <span className="font-mono">{prettyPoly(step.quotientAfter.polynomial)}</span>
                             </div>
                             <div>
                               <span className="text-zinc-500">Remainder after:</span>{" "}
-                              <span className="font-mono">{step.remainderAfter.polynomial ?? "0"}</span>
+                              <span className="font-mono">{prettyPoly(step.remainderAfter.polynomial)}</span>
                             </div>
                           </div>
                         </li>
