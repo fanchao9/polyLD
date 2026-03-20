@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "prebuild": "npm install --prefix .. --include=dev --no-audit --no-fund && npm run build --prefix ..",
+    "prebuild": "npm install --prefix .. --no-audit --no-fund && npm run build --prefix ..",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
