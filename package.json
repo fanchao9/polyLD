@@ -11,8 +11,8 @@
   "author": "",
   "license": "ISC",
   "type": "commonjs",
-  "devDependencies": {
-    "@types/node": "^25.5.0",
-    "typescript": "^5.9.3"
+  "dependencies": {
+    "typescript": "^5.9.3",
+    "@types/node": "^25.5.0"
   }
 }
