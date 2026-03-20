@@ -1,7 +1,8 @@
 # GF(p) Polynomial Long Division (TypeScript)
 
 This module performs polynomial long division in the coefficient field `GF(p)`:
-- For `p=2`, subtraction is XOR-style (mod 2).
+- All coefficient arithmetic is done modulo `p` (so subtraction is “XOR-style” only when `p=2`).
+- For `p>2`, subtraction/addition follow normal mod-`p` arithmetic.
 - Inputs can be either:
   - **bitstring** digits (highest degree on the left), e.g. `100111`
   - **polynomial form** like `1+x+x^2+x^5`
