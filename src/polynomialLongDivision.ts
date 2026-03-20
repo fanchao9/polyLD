@@ -305,10 +305,10 @@ export function dividePolynomialsGFp(
     };
   }
 
-  if (degDivisor >= degDividend) {
+  if (degDivisor > degDividend) {
     throw new PolynomialDivisionError(
-      "DIVISOR_DEGREE_MUST_BE_SMALLER",
-      `Require deg(divisor) < deg(dividend). Got deg(divisor)=${degDivisor}, deg(dividend)=${degDividend}.`
+      "DIVISOR_DEGREE_MUST_NOT_BE_GREATER",
+      `Require deg(divisor) <= deg(dividend). Got deg(divisor)=${degDivisor}, deg(dividend)=${degDividend}.`
     );
   }
 
