@@ -42,3 +42,7 @@ const result = dividePolynomialsGFp("100111", "1011", {
 - The polynomial parser currently supports `+` separated terms only (no `-`).
 - The divisor must have strictly smaller degree than the dividend.
 
+## Web Usage
+Feel free to access this calculator at:
+https://vercel.com/fanchao-lins-projects/poly-ld 
+
